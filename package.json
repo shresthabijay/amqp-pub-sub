@@ -1,0 +1,17 @@
+{
+  "name": "messagingqueue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-publisher": "nodemon index.js",
+    "start-consumer": "nodemon consumer.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.6",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
