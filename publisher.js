@@ -2,8 +2,6 @@ const amqp = require("amqplib");
 
 const INSTANCE_URL = process.env.RABBITMQ_INSTANCE_URL;
 
-console.log(process.env.RABBITMQ_INSTANCE_URL)
-
 let amqpConn = null;
 let pubChannel = null;
 

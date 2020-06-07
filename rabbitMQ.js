@@ -1,6 +1,4 @@
 const amqp = require("amqplib");
-require("dotenv").config();
-
 const INSTANCE_URL = process.env.RABBITMQ_INSTANCE_URL;
 
 let amqpConn = null;
@@ -20,8 +18,6 @@ async function startMessagingConnection() {
             return setTimeout(startMessagingConnection, 1000);
         });
         console.log("[AMQP] connected");
-
-        whenConnected();
     } catch (err) {
         console.error("[AMQP]", err.message);
         return setTimeout(startMessagingConnection, 1000);
@@ -42,9 +38,7 @@ async function startConsumer(
         channel.consume(
             queue,
             (msg) => {
-                console.log(
-                    `[AMQP] (${queue}) message recieved:\n${msg.content.toString()}`
-                );
+                console.log(`[AMQP] (${queue}) message recieved`);
                 consumerHandler(channel, msg);
             },
             consumeProperties
@@ -54,38 +48,8 @@ async function startConsumer(
     }
 }
 
-function whenConnected() {
-    startConsumer(
-        "email-notification",
-        (channel, msg) => {
-            // handle messages here
-            channel.ack(msg, true); // sending acknowledgement to make sure that message is removed from queue
-        },
-        {
-            assertQueueProperties: {
-                durable: true,
-            },
-            consumeProperties: {},
-        }
-    );
-
-    startConsumer(
-        "sms-notification",
-        (channel, msg) => {
-            // handle messages here
-            channel.ack(msg, true); // sending acknowledgement to make sure that message is removed from queu
-        },
-        {
-            assertQueueProperties: {
-                durable: true,
-            },
-            consumeProperties: {},
-        }
-    );
-}
-
 module.exports = {
     startMessagingConnection,
+    startConsumer,
 };
 
-startMessagingConnection();
